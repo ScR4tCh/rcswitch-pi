@@ -1,1 +1,12 @@
 *.o
+*~
+*.so
+*.cxx
+\#*
+rcswitch.py
+*.pyc
+.cproject
+.directory
+.project
+.pydevproject
+.settings

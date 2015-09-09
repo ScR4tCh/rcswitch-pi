@@ -1,10 +1,11 @@
 /*
   RCSwitch - Arduino libary for remote control outlet switches
-  Copyright (c) 2011 Suat Özgür.  All right reserved.
+  Copyright (c) 2011 Suat ï¿½zgï¿½r.  All right reserved.
 
   Contributors:
   - Andre Koehler / info(at)tomate-online(dot)de
   - Gordeev Andrey Vladimirovich / gordeev(at)openpyro(dot)com
+  - Dominik Fischer / dom_fischer(at)web(dot)de
   
   Project home: http://code.google.com/p/rc-switch/
 
@@ -30,7 +31,7 @@
 #else
     #include <wiringPi.h>
     #include <stdint.h>
-    #define NULL 0
+    #include <stddef.h>
     #define CHANGE 1
 #ifdef __cplusplus
 extern "C"{
@@ -62,6 +63,10 @@ class RCSwitch {
     void switchOff(char* sGroup, int nSwitchNumber);
     void switchOn(char sFamily, int nGroup, int nDevice);
     void switchOff(char sFamily, int nGroup, int nDevice);
+    
+    //support 2^5 switches by giving dipswitch binary set for deviceid not 1-5 (A-E)
+    void switchOn(char* sGroup, char* sDevice);
+    void switchOff(char* sGroup, char* sDevice);
 
     void sendTriState(char* Code);
     void send(unsigned long Code, unsigned int length);
@@ -80,6 +85,9 @@ class RCSwitch {
     unsigned int* getReceivedRawdata();
   
     void enableTransmit(int nTransmitterPin);
+    
+    void enableLEDNotify(int ledpin);
+
     void disableTransmit();
     void setPulseLength(int nPulseLength);
     void setRepeatTransmit(int nRepeatTransmit);
@@ -90,6 +98,7 @@ class RCSwitch {
   private:
     char* getCodeWordB(int nGroupNumber, int nSwitchNumber, boolean bStatus);
     char* getCodeWordA(char* sGroup, int nSwitchNumber, boolean bStatus);
+    char* getCodeWordA(char* sGroup, char* sDevice, boolean bStatus);
     char* getCodeWordC(char sFamily, int nGroup, int nDevice, boolean bStatus);
     void sendT0();
     void sendT1();
@@ -106,6 +115,7 @@ class RCSwitch {
 	static bool receiveProtocol2(unsigned int changeCount);
     int nReceiverInterrupt;
     int nTransmitterPin;
+    int ledPin;
     int nPulseLength;
     int nRepeatTransmit;
 	char nProtocol;
